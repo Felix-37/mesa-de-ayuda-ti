@@ -1,0 +1,16 @@
+node_modules
+.next
+out
+build
+# .env.local
+# .env.production
+# .env
+Dockerfile
+.dockerignore
+.git
+.gitignore
+npm-debug.log
+README.md
+LICENSE
+.vscode
+testsprite_tests

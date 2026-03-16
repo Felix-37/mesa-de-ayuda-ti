@@ -1,0 +1,148 @@
+version: "2"
+type: frontend
+tech_stack:
+  - TypeScript
+  - Next.js 14
+  - Tailwind CSS
+  - shadcn/ui
+  - Supabase (Database & Storage)
+  - Firebase Authentication
+routes:
+  - path: /
+    file: src/app/page.tsx
+    auth_required: false
+    description: Landing page with login and registration forms
+  - path: /dashboard
+    file: src/app/dashboard/page.tsx
+    auth_required: true
+    description: Main Kanban board showing tickets organized by status columns (Nuevo, En Progreso, Resuelto) with drag-and-drop
+  - path: /dashboard/crear
+    file: src/app/dashboard/crear/page.tsx
+    auth_required: true
+    description: Form to create a new support ticket with subject, category, priority, description, and file attachment
+  - path: /dashboard/metricas
+    file: src/app/dashboard/metricas/page.tsx
+    auth_required: true
+    description: Analytics dashboard with KPI cards, category/priority charts, and recent activity
+  - path: /dashboard/ticket/[id]
+    file: src/app/dashboard/ticket/[id]/page.tsx
+    auth_required: true
+    description: Detailed view of a single ticket with comments, history, and status management
+features:
+  - name: User Authentication
+    description: >
+      Login with email and password using Firebase Authentication.
+      CRITICAL: The login page is at the ROOT URL "/" (http://localhost:3000/).
+      There is NO /login route. The app does NOT have a /login page.
+      After successful login, the user is redirected to /dashboard.
+      The SPA uses client-side rendering so wait at least 5 seconds after login click for the redirect to complete.
+    files:
+      - src/app/page.tsx
+      - src/context/AuthContext.tsx
+      - src/lib/firebaseClient.ts
+    entry_route: /
+    user_interactions:
+      - Navigate to http://localhost:3000/ (root URL, NOT /login)
+      - Fill email input field
+      - Fill password input field
+      - Click "Iniciar Sesion" button to login
+      - Wait for redirect to /dashboard (takes 3-5 seconds due to Firebase Auth)
+      - Click "Registrarse" tab to switch to registration
+      - Fill registration fields and click "Crear Cuenta"
+      - See error message on invalid credentials
+    api_calls:
+      - method: POST
+        endpoint: Firebase Auth signInWithEmailAndPassword
+    auth_required: false
+  - name: Kanban Board
+    description: View tickets organized in three columns (Nuevo, En Progreso, Resuelto) with drag-and-drop and move buttons
+    files:
+      - src/app/dashboard/page.tsx
+      - src/components/KanbanBoard.tsx
+    entry_route: /dashboard
+    user_interactions:
+      - View tickets in status columns
+      - Drag ticket cards between columns to change status
+      - Click "Mover a" buttons as accessible alternative to drag-and-drop
+      - Use search bar to filter tickets by text
+      - Use priority filter dropdown
+      - Use status filter dropdown
+      - Use category filter dropdown
+      - Click "Exportar CSV" to download tickets
+      - Click on a ticket card to view details
+    api_calls:
+      - method: GET
+        endpoint: supabase.from("tickets").select("*")
+      - method: PATCH
+        endpoint: supabase.from("tickets").update({status})
+    auth_required: true
+  - name: Create Ticket
+    description: Create a new support ticket with all required fields
+    files:
+      - src/app/dashboard/crear/page.tsx
+    entry_route: /dashboard/crear
+    user_interactions:
+      - Fill subject input field
+      - Select category from dropdown (Hardware, Software, Redes, Seguridad)
+      - Select priority from dropdown (Baja, Media, Alta, Critica)
+      - Fill description textarea
+      - Optionally attach a file
+      - Click "Crear Ticket" button to submit
+      - See success redirect to dashboard
+    api_calls:
+      - method: POST
+        endpoint: supabase.from("tickets").insert()
+      - method: POST
+        endpoint: supabase.from("ticket_history").insert()
+    auth_required: true
+  - name: Ticket Detail
+    description: View full ticket details with comments and history
+    files:
+      - src/app/dashboard/ticket/[id]/page.tsx
+    entry_route: /dashboard/ticket/[id]
+    user_interactions:
+      - View ticket subject, description, status, priority, category
+      - Click "Gestionar Estado" dropdown to change ticket status
+      - Write a comment in the textarea
+      - Click "Publicar Comentario" to submit
+      - View comment history
+      - View change history timeline
+      - Click "Volver al Tablero" to navigate back
+      - Click attachment link if present
+    api_calls:
+      - method: GET
+        endpoint: supabase.from("tickets").select("*").eq("id", ticketId)
+      - method: GET
+        endpoint: supabase.from("comments").select("*").eq("ticket_id", ticketId)
+      - method: GET
+        endpoint: supabase.from("ticket_history").select("*").eq("ticket_id", ticketId)
+      - method: POST
+        endpoint: supabase.from("comments").insert()
+      - method: PATCH
+        endpoint: supabase.from("tickets").update({status})
+    auth_required: true
+  - name: Metrics Dashboard
+    description: View analytics and KPIs about ticket status and distribution
+    files:
+      - src/app/dashboard/metricas/page.tsx
+    entry_route: /dashboard/metricas
+    user_interactions:
+      - View total tickets count
+      - View pending tickets count
+      - View resolved tickets count
+      - View critical cases count
+      - View tickets by category chart
+      - View tickets by priority chart
+      - View recent activity list
+      - Click "Ver Tablero Completo" to navigate to kanban
+    api_calls:
+      - method: GET
+        endpoint: supabase.from("tickets").select("*")
+    auth_required: true
+known_limitations:
+  - issue: Firebase Authentication rate limiting may block rapid automated login attempts
+    location: src/context/AuthContext.tsx
+    impact: Automated tests that login repeatedly may be throttled or blocked by Firebase
+  - issue: Drag-and-drop may not work reliably in automated tests
+    location: src/components/KanbanBoard.tsx
+    impact: Use the "Mover a" buttons as alternative for testing status changes
