@@ -64,6 +64,14 @@ El proyecto utiliza un enfoque híbrido de servicios en la nube:
 - `ticket_history`: Registro cronológico de cambios de estado para auditoría.
 - `admins`: Lista blanca de correos electrónicos con permisos de administrador.
 
+## Rendimiento y Seguridad
+
+El proyecto ha sido auditado siguiendo las mejores prácticas de Vercel. Consulta el [Reporte de Auditoría](PERFORMANCE_AUDIT.md) para más detalles sobre:
+- Eliminación de bottlenecks en carga de datos.
+- Optimización de re-renderizado en el Kanban.
+- Estrategias de Dynamic Imports.
+- Configuración de RLS en Supabase.
+
 ## 👥 Roles y Permisos
 
 - **Usuario**: Crea tickets, puede adjuntar archivos y ver el estado de sus propios requerimientos. No puede mover tickets en el Kanban.
