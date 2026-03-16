@@ -29,14 +29,6 @@ export default function MetricasPage() {
     if (!user) return;
     setLoading(true);
 
-    const { data: adminData } = await supabase
-      .from("admins")
-      .select("email")
-      .eq("email", user.email || "")
-      .maybeSingle();
-
-    const isAdmin = !!adminData;
-
     let query = supabase
       .from("tickets")
       .select("*")
@@ -46,10 +38,10 @@ export default function MetricasPage() {
       query = query.eq("user_id", user.uid);
     }
 
-    const { data } = await query;
-    if (data) setTickets(data as Ticket[]);
+    const { data, error } = await query;
+    if (!error && data) setTickets(data as Ticket[]);
     setLoading(false);
-  }, [user]);
+  }, [user, isAdmin]);
 
   useEffect(() => {
     fetchTickets();
@@ -157,7 +149,7 @@ export default function MetricasPage() {
       {/* Summary cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {summaryCards.map((card) => (
-          <Card key={card.title} className="group relative overflow-hidden border-none shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+          <Card key={card.title} className="group relative overflow-hidden border-none shadow-sm hover:shadow-xl transition-[box-shadow,transform] duration-300 hover:-translate-y-1">
             <div className={`absolute top-0 left-0 w-1 h-full ${card.accent}`} />
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
@@ -192,7 +184,7 @@ export default function MetricasPage() {
                     </div>
                     <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-navy-600 rounded-full transition-all duration-700 ease-out"
+                        className="h-full bg-navy-600 rounded-full transition-[width] duration-700 ease-out"
                         style={{ width: `${(c.count / maxCatCount) * 100}%` }}
                       />
                     </div>
@@ -216,7 +208,7 @@ export default function MetricasPage() {
                     </div>
                     <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                       <div
-                        className={`h-full ${priorityBarColors[p.label]} rounded-full transition-all duration-700 ease-out`}
+                        className={`h-full ${priorityBarColors[p.label]} rounded-full transition-[width] duration-700 ease-out`}
                         style={{ width: `${(p.count / maxPriCount) * 100}%` }}
                       />
                     </div>
@@ -271,8 +263,8 @@ export default function MetricasPage() {
             )}
             <div className="p-6 bg-slate-50/50 border-t border-slate-100">
               <Link href="/dashboard">
-                <Button className="w-full bg-navy-900 hover:bg-navy-800 text-white font-bold text-xs rounded-xl h-10 shadow-sm border-none">
-                  Ver Tablero Completo
+                <Button className="w-full bg-navy-900 hover:bg-navy-800 text-white font-bold text-xs rounded-xl h-10 shadow-sm border-none transition-[background-color]">
+                  Ver tablero completo
                 </Button>
               </Link>
             </div>

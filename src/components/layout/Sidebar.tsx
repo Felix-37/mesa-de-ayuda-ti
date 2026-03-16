@@ -73,10 +73,10 @@ export default function Sidebar() {
   const visibleItems = navItems.filter(item => !item.adminOnly || isAdmin);
 
   return (
-    <aside className="fixed left-0 top-0 z-40 flex h-screen w-16 lg:w-64 flex-col bg-navy-950 text-white transition-all duration-300 shadow-xl overflow-hidden">
+    <aside className="fixed left-0 top-0 z-40 flex h-screen w-16 lg:w-64 flex-col bg-navy-950 text-white transition-[width,background-color] duration-300 shadow-xl overflow-hidden">
       {/* Logo Section */}
       <div className="flex h-16 items-center gap-3 px-5 border-b border-navy-800/50 bg-navy-950">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center bg-white rounded-lg p-1 shadow-lg overflow-hidden group-hover:scale-105 transition-transform">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center bg-white rounded-lg p-1 shadow-lg overflow-hidden group-hover:scale-105 transition-[transform]">
           <img src="/logo.png" alt="Logo Uniajc" className="w-full h-full object-contain" />
         </div>
         <div className="hidden lg:flex flex-col">
@@ -99,14 +99,14 @@ export default function Sidebar() {
                 <Link
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold transition-all duration-200 group relative",
+                    "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold transition-[background-color,color,transform,box-shadow] duration-200 group relative",
                     isActive
                       ? "bg-accent-yellow-500 text-navy-950 shadow-md translate-x-1"
                       : "text-navy-300 hover:bg-navy-800/50 hover:text-white"
                   )}
                 >
                   <div className={cn(
-                    "transition-transform duration-200 group-hover:scale-110",
+                    "transition-[transform] duration-200 group-hover:scale-110",
                     isActive ? "text-navy-950" : "text-navy-400 group-hover:text-accent-yellow-400"
                   )}>
                     {item.icon}
@@ -127,7 +127,7 @@ export default function Sidebar() {
 
       {/* Bottom section with institutional link or something else */}
       <div className="p-4 border-t border-navy-800/50">
-        <div className="hidden lg:flex flex-col gap-1 items-center justify-center opacity-40 hover:opacity-100 transition-opacity">
+        <div className="hidden lg:flex flex-col gap-1 items-center justify-center opacity-40 hover:opacity-100 transition-[opacity]">
            <span className="text-[9px] font-bold text-navy-400 uppercase tracking-widest text-center">
              Proyecto Mesa de Ayuda
            </span>

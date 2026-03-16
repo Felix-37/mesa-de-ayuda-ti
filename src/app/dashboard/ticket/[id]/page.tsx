@@ -180,9 +180,9 @@ export default function TicketDetailPage() {
             </div>
 
             <DropdownMenu>
-              <DropdownMenuTrigger className="bg-accent-yellow-500 text-navy-950 font-black hover:bg-accent-yellow-400 border-none px-6 rounded-xl shadow-lg h-12 flex items-center gap-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-accent-yellow-400">
-                GESTIONAR ESTADO
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
+              <DropdownMenuTrigger className="bg-accent-yellow-500 text-navy-950 font-black hover:bg-accent-yellow-400 border-none px-6 rounded-xl shadow-lg h-12 flex items-center gap-2 text-sm transition-[background-color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent-yellow-600">
+                Gestionar estado
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                 </svg>
               </DropdownMenuTrigger>
@@ -219,7 +219,7 @@ export default function TicketDetailPage() {
                     href={ticket.attachment_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-3 p-4 rounded-2xl bg-sky-50 text-sky-700 hover:bg-sky-100 transition-all border border-sky-100 group"
+                    className="inline-flex items-center gap-3 p-4 rounded-2xl bg-sky-50 text-sky-700 hover:bg-sky-100 transition-[background-color] border border-sky-100 group"
                   >
                     <div className="p-2 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -244,19 +244,19 @@ export default function TicketDetailPage() {
               <CardContent className="p-0">
                 <div className="p-6 bg-slate-50/50 border-b border-slate-100">
                   <Textarea
-                    placeholder="Escribe una actualización o comentario interno..."
+                    placeholder="Escribe una actualización o comentario interno…"
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     rows={3}
-                    className="bg-white border-slate-200 rounded-xl focus:ring-navy-600 focus:border-navy-600 transition-all text-sm font-medium resize-none shadow-inner"
+                    className="bg-white border-slate-200 rounded-xl focus-visible:ring-navy-600 focus-visible:border-navy-600 transition-[border-color,box-shadow] text-sm font-medium resize-none shadow-inner"
                   />
                   <div className="flex justify-end mt-4">
                     <Button
                       onClick={addComment}
                       disabled={!newComment.trim() || commentLoading}
-                      className="bg-navy-900 hover:bg-navy-800 text-white font-black text-xs px-8 h-10 rounded-xl shadow-lg transition-all"
+                      className="bg-navy-900 hover:bg-navy-800 text-white font-black text-xs px-8 h-10 rounded-xl shadow-lg transition-[background-color,transform,box-shadow]"
                     >
-                      {commentLoading ? "ENVIANDO..." : "PUBLICAR COMENTARIO"}
+                      {commentLoading ? "Enviando…" : "Publicar comentario"}
                     </Button>
                   </div>
                 </div>

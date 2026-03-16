@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, memo, useMemo } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabaseClient";
 import { cn } from "@/lib/utils";
@@ -44,7 +44,7 @@ const statusHeaderColors: Record<TicketStatus, string> = {
   Resuelto: "text-green-600 bg-green-50/50",
 };
 
-function TicketCard({
+const TicketCard = memo(function TicketCard({
   ticket,
   onMove,
   isAdmin,
@@ -65,7 +65,7 @@ function TicketCard({
         e.dataTransfer.effectAllowed = "move";
       }}
       className={cn(
-        "border-l-4 bg-white shadow-sm hover:shadow-md transition-all duration-200 border-y-0 border-r-0",
+        "border-l-4 bg-white shadow-sm hover:shadow-md transition-[box-shadow,border-color,background-color] duration-200 border-y-0 border-r-0",
         isAdmin ? "cursor-grab active:cursor-grabbing" : "cursor-default",
         statusColors[ticket.status]
       )}
@@ -116,9 +116,10 @@ function TicketCard({
           {isAdmin && (
             <DropdownMenu>
               <DropdownMenuTrigger
-                className="inline-flex items-center justify-center rounded-lg text-[10px] font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-navy-100 bg-white h-7 px-3 text-navy-700 hover:bg-navy-50 hover:border-navy-200"
+                aria-label={`Mover ticket ${ticket.subject} a otro estado`}
+                className="inline-flex items-center justify-center rounded-lg text-[10px] font-bold ring-offset-background transition-[color,background-color,border-color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-navy-100 bg-white h-7 px-3 text-navy-700 hover:bg-navy-50 hover:border-navy-200"
               >
-                Mover a...
+                Mover a…
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">
                 {availableStatuses.map((status) => (
@@ -137,9 +138,9 @@ function TicketCard({
       </CardContent>
     </Card>
   );
-}
+});
 
-function KanbanColumn({
+const KanbanColumn = memo(function KanbanColumn({
   status,
   tickets,
   onMove,
@@ -242,7 +243,7 @@ export default function KanbanBoard() {
     fetchTickets();
   }, [fetchTickets]);
 
-  const moveTicket = async (ticketId: string, newStatus: TicketStatus) => {
+  const moveTicket = useCallback(async (ticketId: string, newStatus: TicketStatus) => {
     if (!isAdmin) return;
 
     const ticket = tickets.find((t) => t.id === ticketId);
@@ -275,7 +276,7 @@ export default function KanbanBoard() {
       old_value: oldStatus,
       new_value: newStatus,
     });
-  };
+  }, [isAdmin, tickets]);
 
   // Sorting and Filters
   const priorityWeight: Record<string, number> = {
@@ -285,27 +286,29 @@ export default function KanbanBoard() {
     "Baja": 1,
   };
 
-  const processedTickets = [...tickets]
-    .filter((ticket) => {
-      const matchSearch =
-        search === "" ||
-        ticket.subject.toLowerCase().includes(search.toLowerCase()) ||
-        ticket.description.toLowerCase().includes(search.toLowerCase()) ||
-        ticket.user_email?.toLowerCase().includes(search.toLowerCase());
-      const matchPriority =
-        filterPriority === "all" || ticket.priority === filterPriority;
-      const matchCategory =
-        filterCategory === "all" || ticket.category === filterCategory;
-      return matchSearch && matchPriority && matchCategory;
-    })
-    .sort((a, b) => {
-      // 1. Prioridad (Descendente)
-      const pDiff = priorityWeight[b.priority] - priorityWeight[a.priority];
-      if (pDiff !== 0) return pDiff;
-      
-      // 2. Fecha de creación (Ascendente - FIFO)
-      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-    });
+  const processedTickets = useMemo(() => {
+    return [...tickets]
+      .filter((ticket) => {
+        const matchSearch =
+          search === "" ||
+          ticket.subject.toLowerCase().includes(search.toLowerCase()) ||
+          ticket.description.toLowerCase().includes(search.toLowerCase()) ||
+          ticket.user_email?.toLowerCase().includes(search.toLowerCase());
+        const matchPriority =
+          filterPriority === "all" || ticket.priority === filterPriority;
+        const matchCategory =
+          filterCategory === "all" || ticket.category === filterCategory;
+        return matchSearch && matchPriority && matchCategory;
+      })
+      .sort((a, b) => {
+        // 1. Prioridad (Descendente)
+        const pDiff = priorityWeight[b.priority] - priorityWeight[a.priority];
+        if (pDiff !== 0) return pDiff;
+        
+        // 2. Fecha de creación (Ascendente - FIFO)
+        return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      });
+  }, [tickets, search, filterPriority, filterCategory]);
 
   // Export CSV
   const exportCSV = () => {
@@ -352,15 +355,15 @@ export default function KanbanBoard() {
         </div>
         <div className="flex gap-2">
           <Link href="/dashboard/crear">
-            <Button className="bg-navy-800 hover:bg-navy-700 text-white">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-2">
+            <Button className="bg-navy-800 hover:bg-navy-700 text-white transition-[background-color]">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-2" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
               </svg>
-              Nuevo Ticket
+              Nuevo ticket
             </Button>
           </Link>
-          <Button variant="outline" onClick={exportCSV} className="border-navy-200 text-navy-700">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-2">
+          <Button variant="outline" onClick={exportCSV} aria-label="Exportar tickets a CSV" className="border-navy-200 text-navy-700 transition-[background-color,border-color,color]">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-2" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
             </svg>
             Exportar CSV
@@ -372,10 +375,12 @@ export default function KanbanBoard() {
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="flex-1">
           <Input
-            placeholder="Buscar tickets..."
+            name="search-kanban"
+            placeholder="Buscar tickets…"
+            autoComplete="off"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="max-w-sm"
+            className="max-w-sm transition-[border-color,box-shadow]"
           />
         </div>
         <Select value={filterPriority} onValueChange={(val) => val && setFilterPriority(val)}>

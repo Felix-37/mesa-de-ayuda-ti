@@ -39,8 +39,10 @@ export default function TopBar() {
             />
           </svg>
           <Input
-            placeholder="Buscar por ID, usuario o problema..."
-            className="w-full pl-10 bg-slate-50 border-transparent focus:bg-white focus:border-navy-200 transition-all rounded-full h-10 text-sm"
+            name="search"
+            placeholder="Buscar por ID, usuario o problema…"
+            autoComplete="off"
+            className="w-full pl-10 bg-slate-50 border-transparent focus:bg-white focus:border-navy-200 transition-[background-color,border-color] rounded-full h-10 text-sm"
           />
         </div>
       </div>
@@ -50,7 +52,7 @@ export default function TopBar() {
         {/* Notifications */}
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <Button variant="ghost" size="icon" className="text-gray-500 hover:text-navy-900 relative">
+            <Button variant="ghost" size="icon" aria-label="Notificaciones" className="text-gray-500 hover:text-navy-900 relative">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -83,7 +85,7 @@ export default function TopBar() {
                 <p className="text-xs text-slate-400 font-medium leading-relaxed">No tienes notificaciones pendientes en este momento.</p>
               </div>
               <Button variant="outline" className="w-full text-xs font-bold border-slate-200 text-slate-500 hover:bg-slate-50 rounded-xl" onClick={() => {}}>
-                MARCAR TODAS COMO LEÍDAS
+                Marcar todas como leídas
               </Button>
             </div>
           </DropdownMenuContent>
@@ -92,7 +94,7 @@ export default function TopBar() {
         {/* User dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <div className="flex items-center gap-3 px-2 py-1.5 rounded-lg hover:bg-slate-50 transition-colors group cursor-pointer">
+            <div role="button" aria-label="Menú de usuario" className="flex items-center gap-3 px-2 py-1.5 rounded-lg hover:bg-slate-50 transition-colors group cursor-pointer">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-navy-100 text-navy-800 font-semibold text-xs border border-navy-200 group-hover:bg-navy-200 transition-colors">
                 {userInitial}
               </div>

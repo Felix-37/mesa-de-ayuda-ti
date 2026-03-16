@@ -100,7 +100,7 @@ export default function CrearTicketPage() {
         {/* Header Estilo Stitch */}
         <div className="bg-navy-900 px-8 py-6 flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-white tracking-tight">Crear Nuevo Ticket</h1>
+            <h1 className="text-xl font-bold text-white tracking-tight">Crear nuevo ticket</h1>
             <p className="text-navy-300 text-xs mt-1">Completa los detalles de tu requerimiento técnico</p>
           </div>
           <Link href="/dashboard">
@@ -117,11 +117,11 @@ export default function CrearTicketPage() {
             <div className="space-y-2 md:col-span-2">
               <label className="text-xs font-black uppercase tracking-widest text-slate-500">Asunto del Problema</label>
               <Input
-                placeholder="Ej: No funciona la impresora del segundo piso"
+                placeholder="Ej: No funciona la impresora del segundo piso…"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 required
-                className="h-12 border-slate-200 focus:border-navy-500 bg-slate-50/50"
+                className="h-12 border-slate-200 focus:border-navy-500 bg-slate-50/50 transition-[border-color]"
               />
             </div>
 
@@ -160,11 +160,11 @@ export default function CrearTicketPage() {
             <div className="space-y-2 md:col-span-2">
               <label className="text-xs font-black uppercase tracking-widest text-slate-500">Descripción Detallada</label>
               <Textarea
-                placeholder="Describe el problema detalladamente para una mejor resolución..."
+                placeholder="Describe el problema detalladamente para una mejor resolución…"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required
-                className="min-h-[150px] border-slate-200 focus:border-navy-500 bg-slate-50/50 resize-none font-medium"
+                className="min-h-[150px] border-slate-200 focus:border-navy-500 bg-slate-50/50 resize-none font-medium transition-[border-color]"
               />
             </div>
 
@@ -173,7 +173,7 @@ export default function CrearTicketPage() {
               <label className="text-xs font-black uppercase tracking-widest text-slate-500">Evidencias o Archivos (Opcional)</label>
               <div 
                 className={cn(
-                  "relative group flex flex-col items-center justify-center w-full h-44 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300",
+                  "relative group flex flex-col items-center justify-center w-full h-44 border-2 border-dashed rounded-2xl cursor-pointer transition-[background-color,border-color,transform] duration-300",
                   file 
                     ? "border-green-400 bg-green-50/50" 
                     : "border-slate-300 bg-sky-50/30 group-hover:bg-sky-50/60 group-hover:border-navy-300"
@@ -237,15 +237,15 @@ export default function CrearTicketPage() {
             <Button
               type="submit"
               disabled={loading || !category || !priority}
-              className="flex-1 h-12 bg-navy-900 hover:bg-navy-800 text-white font-bold shadow-lg shadow-navy-900/20"
+              className="flex-1 h-12 bg-navy-900 hover:bg-navy-800 text-white font-bold shadow-lg shadow-navy-900/20 transition-[background-color,transform,box-shadow]"
             >
               {loading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2" />
-                  Creando...
+                  Creando…
                 </>
               ) : (
-                "Crear Ticket"
+                "Crear ticket"
               )}
             </Button>
           </div>

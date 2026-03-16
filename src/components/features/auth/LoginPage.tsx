@@ -69,7 +69,7 @@ export default function LoginPage() {
               <Input
                 id="email"
                 type="email"
-                placeholder="tu@correo.com"
+                placeholder="hola@ejemplo.com…"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -82,7 +82,7 @@ export default function LoginPage() {
               <Input
                 id="password"
                 type="password"
-                placeholder="••••••••"
+                placeholder="Mínimo 6 caracteres…"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -98,10 +98,10 @@ export default function LoginPage() {
 
             <Button
               type="submit"
-              className="w-full bg-navy-800 hover:bg-navy-700 text-white"
+              className="w-full bg-navy-800 hover:bg-navy-700 text-white transition-[background-color]"
               disabled={loading}
             >
-              {loading ? "Cargando..." : isRegister ? "Registrarse" : "Iniciar Sesión"}
+              {loading ? "Cargando…" : isRegister ? "Registrarse" : "Iniciar sesión"}
             </Button>
           </form>
 
