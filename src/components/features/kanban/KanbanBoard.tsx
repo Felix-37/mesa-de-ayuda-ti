@@ -44,6 +44,13 @@ const statusHeaderColors: Record<TicketStatus, string> = {
   Resuelto: "text-green-600 bg-green-50/50",
 };
 
+const priorityWeight: Record<TicketPriority, number> = {
+  "Crítica": 4,
+  Alta: 3,
+  Media: 2,
+  Baja: 1,
+};
+
 const TicketCard = memo(function TicketCard({
   ticket,
   onMove,
@@ -197,7 +204,7 @@ const KanbanColumn = memo(function KanbanColumn({
       </div>
     </div>
   );
-}
+});
 
 /**
  * Componente principal del Tablero Kanban.
@@ -277,14 +284,6 @@ export default function KanbanBoard() {
       new_value: newStatus,
     });
   }, [isAdmin, tickets]);
-
-  // Sorting and Filters
-  const priorityWeight: Record<string, number> = {
-    "Crítica": 4,
-    "Alta": 3,
-    "Media": 2,
-    "Baja": 1,
-  };
 
   const processedTickets = useMemo(() => {
     return [...tickets]

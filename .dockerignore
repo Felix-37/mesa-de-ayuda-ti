@@ -2,6 +2,8 @@ node_modules
 .next
 out
 build
+coverage
+quality
 # .env.local
 # .env.production
 # .env
@@ -9,8 +11,12 @@ Dockerfile
 .dockerignore
 .git
 .gitignore
+.claude
+.kiro
 npm-debug.log
 README.md
 LICENSE
 .vscode
 testsprite_tests
+supabase/.branches
+supabase/.temp

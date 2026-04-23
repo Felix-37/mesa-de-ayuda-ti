@@ -27,6 +27,10 @@ coverage/
 .eslintcache
 .cache/
 testsprite_tests/
+quality/
+skills-lock.json
+PERFORMANCE_AUDIT.md
+Product_Specification_Doc.md
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

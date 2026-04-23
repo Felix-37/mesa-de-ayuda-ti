@@ -1,81 +1,98 @@
-# 🎫 Mesa de Ayuda TI - UNIAJC
+# Mesa de Ayuda TI
 
-Sistema institucional de gestión de tickets de soporte técnico diseñado para optimizar la atención de incidencias mediante un tablero Kanban dinámico y control de acceso basado en roles (RBAC).
+Aplicacion web para gestionar tickets de soporte con autenticacion en Firebase, datos en Supabase y una interfaz Kanban construida con Next.js 14.
 
-## 🚀 Tecnologías Principales
+## Stack
 
-- **Frontend**: Next.js 14 (App Router) + Tailwind CSS.
-- **Componentes UI**: Radix UI + Shadcn/UI.
-- **Autenticación**: Firebase Authentication (Email/Password & Google).
-- **Base de Datos**: Supabase (PostgreSQL) con políticas de RLS.
-- **Almacenamiento**: Firebase Storage (Gestión de archivos adjuntos).
-- **Despliegue**: Google Cloud Run (Dockerized).
+- Next.js 14 + React 18 + TypeScript
+- Tailwind CSS + shadcn/ui
+- Firebase Authentication
+- Supabase PostgreSQL + migraciones SQL
+- Docker para despliegue
 
-## 🏗️ Arquitectura y Responsabilidades
+## Estructura
 
-El proyecto utiliza un enfoque híbrido de servicios en la nube:
-- **Firebase**: Gestiona la identidad del usuario y los archivos físicos (imágenes/logs).
-- **Supabase**: Almacena los metadatos de los tickets, comentarios e historial, permitiendo consultas relacionales complejas y auditoría.
+- `src/`: codigo fuente de la aplicacion
+- `public/`: assets publicos
+- `supabase/`: configuracion local y migraciones de base de datos
 
-### Estructura de Carpetas (Modular)
-- `src/components/ui`: Componentes atómicos reutilizables.
-- `src/components/features`: Lógica de negocio específica (Kanban, Auth).
-- `src/components/layout`: Estructura global (Sidebar, Navbar).
-- `src/services`: Capa de abstracción para llamadas a API y DB.
+## Instalacion
 
-## 🛠️ Configuración Local
+### Requisitos previos
 
-1. **Clonar el repositorio**:
-   ```bash
-   git clone <url-del-repositorio>
-   cd helpdesk
-   ```
+- Node.js `18.17+` o `20.x`
+- `npm` `9+`
+- Git
+- Un proyecto de Firebase con Authentication habilitado
+- Un proyecto de Supabase con URL y anon key disponibles
+- Opcional: Supabase CLI `2.x` y Docker Desktop si vas a correr la base de datos localmente
 
-2. **Instalar dependencias**:
-   ```bash
-   npm install
-   ```
+### 1. Clonar el repositorio
 
-3. **Variables de Entorno**: Crea un archivo `.env.local` con las siguientes llaves:
-   ```env
-   # Supabase
-   NEXT_PUBLIC_SUPABASE_URL=tu_url_supabase
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key_supabase
+```bash
+git clone <url-del-repositorio>
+cd helpdesk
+```
 
-   # Firebase
-   NEXT_PUBLIC_FIREBASE_API_KEY=tu_api_key
-   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=tu_auth_domain
-   NEXT_PUBLIC_FIREBASE_PROJECT_ID=tu_project_id
-   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=tu_storage_bucket
-   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=tu_sender_id
-   NEXT_PUBLIC_FIREBASE_APP_ID=tu_app_id
-   ```
+### 2. Instalar dependencias
 
-4. **Ejecutar en desarrollo**:
-   ```bash
-   npm run dev
-   ```
+```bash
+npm install
+```
 
-## 📊 Base de Datos
+### 3. Configurar variables de entorno
 
-### Tablas Principales
-- `tickets`: Almacena el asunto, prioridad, estado y autor (`user_email`).
-- `comments`: Hilo de conversación interna por ticket.
-- `ticket_history`: Registro cronológico de cambios de estado para auditoría.
-- `admins`: Lista blanca de correos electrónicos con permisos de administrador.
+Duplica el archivo de ejemplo y completa tus credenciales:
 
-## Rendimiento y Seguridad
+```powershell
+Copy-Item .env.example .env.local
+```
 
-El proyecto ha sido auditado siguiendo las mejores prácticas de Vercel. Consulta el [Reporte de Auditoría](PERFORMANCE_AUDIT.md) para más detalles sobre:
-- Eliminación de bottlenecks en carga de datos.
-- Optimización de re-renderizado en el Kanban.
-- Estrategias de Dynamic Imports.
-- Configuración de RLS en Supabase.
+Variables requeridas en `.env.local`:
 
-## 👥 Roles y Permisos
+```env
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+```
 
-- **Usuario**: Crea tickets, puede adjuntar archivos y ver el estado de sus propios requerimientos. No puede mover tickets en el Kanban.
-- **Administrador**: Visualiza todos los tickets del sistema, gestiona estados mediante Drag & Drop y accede al panel de métricas.
+### 4. Preparar la base de datos
 
----
-Desarrollado por: Juan Felipe Chilito, Ethan Alejandro Mezu, Nicolle Mera Gomez.
+Si usas una instancia remota de Supabase, aplica las migraciones en ese proyecto y continua al siguiente paso.
+
+Si vas a trabajar con Supabase local:
+
+```bash
+supabase start
+supabase db reset
+```
+
+Esto levantara el stack local usando `supabase/config.toml` y aplicara las migraciones dentro de `supabase/migrations/`.
+
+### 5. Ejecutar el proyecto
+
+```bash
+npm run dev
+```
+
+Abre `http://localhost:3000`.
+
+## Scripts utiles
+
+```bash
+npm run dev
+npm run build
+npm run start
+npm run lint
+```
+
+## Notas de repositorio
+
+- `package-lock.json` se conserva versionado porque este proyecto usa `npm` como gestor principal.
+- Los artefactos regenerables y locales quedan fuera del repo: `node_modules/`, `.next/`, `quality/`, `testsprite_tests/`, `.claude/`, `.kiro/`, y el estado local de Supabase.
+- La configuracion esencial del proyecto si permanece versionada: `package.json`, `tsconfig.json`, `next.config.mjs`, `tailwind.config.ts`, `components.json`, `Dockerfile`, `.dockerignore` y las migraciones SQL.
